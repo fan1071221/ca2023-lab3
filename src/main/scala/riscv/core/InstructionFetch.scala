@@ -21,11 +21,15 @@ class InstructionFetch extends Module {
     val instruction         = Output(UInt(Parameters.InstructionWidth))
   })
   val pc = RegInit(ProgramCounter.EntryAddress)
-
+  //If a jump is required, the PC is directed to the jump address
   when(io.instruction_valid) {
-    io.instruction := io.instruction_read_data
+    io.instruction := io.instruction_read_data //the current instruction pointed to by the PC is fetched
     // lab3(InstructionFetch) begin
-
+    when(io.jump_flag_id){//If a jump is required, the PC is directed to the jump address
+      pc := io.jump_address_id
+    }.otherwise{ //otherwise, it is incremented to PC + 4.
+      pc := pc + 4.U
+    }
     // lab3(InstructionFetch) end
 
   }.otherwise {
