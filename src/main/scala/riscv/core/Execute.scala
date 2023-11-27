@@ -38,7 +38,15 @@ class Execute extends Module {
 
   // lab3(Execute) begin
 
+  // 根據 ALU 操作數來源選擇，設置 ALU 的輸入
+  alu.io.op1 := Mux(io.aluop1_source === ALUOp1Source.Register, io.reg1_data, io.instruction_address)
+  alu.io.op2 := Mux(io.aluop2_source === ALUOp2Source.Register, io.reg2_data, io.immediate)
+
+  // 從 ALU 控制模組獲取 ALU 的操作類型
+  alu.io.func := alu_ctrl.io.alu_funct
+  
   // lab3(Execute) end
+
 
   io.mem_alu_result := alu.io.result
   io.if_jump_flag := opcode === Instructions.jal ||

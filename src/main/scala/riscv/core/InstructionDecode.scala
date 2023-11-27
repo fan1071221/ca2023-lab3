@@ -196,6 +196,23 @@ class InstructionDecode extends Module {
 
   // lab3(InstructionDecode) begin
 
+  // ex_aluop2_source: ALU 第二操作數來源選擇
+  // 對於 R 型指令，來源通常是一個寄存器。
+  // 對於 I 型、S 型和某些其他指令，來源是立即數。
+  io.ex_aluop2_source := Mux(
+    opcode === InstructionTypes.RM,
+    ALUOp2Source.Register,
+    ALUOp2Source.Immediate
+  )
+
+  // memory_read_enable: 記憶體讀取啟用
+  // 對於負載（L 型）指令啟用。
+  io.memory_read_enable := (opcode === InstructionTypes.L)
+
+  // memory_write_enable: 記憶體寫入啟用
+  // 對於存儲（S 型）指令啟用。
+  io.memory_write_enable := (opcode === InstructionTypes.S)
+
   // lab3(InstructionDecode) end
 
   io.wb_reg_write_source := MuxCase(
